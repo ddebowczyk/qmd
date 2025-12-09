@@ -8,6 +8,8 @@ Use Bun instead of Node.js (`bun` not `node`, `bun install` not `npm install`).
 qmd init               # Initialize .qmd/ directory for project-local index
 qmd doctor             # Check system health and diagnose issues
 qmd add .              # Index markdown files in current directory
+qmd update             # Re-index all collections
+qmd update <id>        # Re-index specific collection by ID
 qmd status             # Show index status and collections
 qmd embed              # Generate vector embeddings (requires Ollama)
 qmd search <query>     # BM25 full-text search
