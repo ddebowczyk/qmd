@@ -1,7 +1,7 @@
 import { Command, Flags } from '@oclif/core';
 import { getDb, ensureVecTable, getHashesNeedingEmbedding } from '../database/index.ts';
 import { embedDocument, chunkDocument } from '../services/embedding.ts';
-import { DEFAULT_EMBED_MODEL } from '../config/constants.ts';
+import { getEmbedModel } from '../config/constants.ts';
 import { progress } from '../config/terminal.ts';
 import { formatBytes } from '../utils/formatters.ts';
 
@@ -28,7 +28,7 @@ export default class EmbedCommand extends Command {
     const { flags } = await this.parse(EmbedCommand);
 
     const db = getDb(flags.index);
-    const model = flags['embed-model'] || DEFAULT_EMBED_MODEL;
+    const model = getEmbedModel(flags['embed-model']);
 
     try {
       // If force, clear all vectors

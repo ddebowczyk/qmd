@@ -3,7 +3,7 @@ import { existsSync } from 'fs';
 import { resolve } from 'path';
 import { getPwd, getDbPath } from '../utils/paths.ts';
 import { getDb } from '../database/index.ts';
-import { OLLAMA_URL } from '../config/constants.ts';
+import { getOllamaUrl } from '../config/constants.ts';
 import { getHashesNeedingEmbedding } from '../database/db.ts';
 import { runAllIntegrityChecks, autoFixIssues } from '../database/integrity.ts';
 
@@ -180,8 +180,9 @@ export default class DoctorCommand extends Command {
     const results: CheckResult[] = [];
 
     // Check Ollama server
+    const ollamaUrl = getOllamaUrl();
     try {
-      const response = await fetch(OLLAMA_URL, {
+      const response = await fetch(ollamaUrl, {
         method: 'GET',
         signal: AbortSignal.timeout(2000),
       });
@@ -189,12 +190,12 @@ export default class DoctorCommand extends Command {
       if (response.ok) {
         results.push({
           status: 'success',
-          message: `Ollama server: running at ${OLLAMA_URL}`,
+          message: `Ollama server: running at ${ollamaUrl}`,
         });
 
         // Check for models
         try {
-          const tagsResponse = await fetch(`${OLLAMA_URL}/api/tags`);
+          const tagsResponse = await fetch(`${ollamaUrl}/api/tags`);
           if (tagsResponse.ok) {
             const data = (await tagsResponse.json()) as { models: any[] };
             results.push({
@@ -217,7 +218,7 @@ export default class DoctorCommand extends Command {
     } catch (error) {
       results.push({
         status: 'error',
-        message: `Ollama server not reachable at ${OLLAMA_URL}`,
+        message: `Ollama server not reachable at ${ollamaUrl}`,
         fix: "Start Ollama with 'ollama serve' or set OLLAMA_URL env var",
       });
     }

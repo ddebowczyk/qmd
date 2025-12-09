@@ -3,7 +3,7 @@ import { existsSync } from 'fs';
 import { getDbPath } from '../utils/paths.ts';
 import { getDb } from '../database/index.ts';
 import { hybridSearch } from '../services/search.ts';
-import { DEFAULT_EMBED_MODEL, DEFAULT_RERANK_MODEL } from '../config/constants.ts';
+import { getEmbedModel, getRerankModel } from '../config/constants.ts';
 import { logSearch } from '../utils/history.ts';
 
 export default class QueryCommand extends Command {
@@ -56,8 +56,8 @@ export default class QueryCommand extends Command {
     const db = getDb(flags.index);
 
     try {
-      const embedModel = flags['embed-model'] || DEFAULT_EMBED_MODEL;
-      const rerankModel = flags['rerank-model'] || DEFAULT_RERANK_MODEL;
+      const embedModel = getEmbedModel(flags['embed-model']);
+      const rerankModel = getRerankModel(flags['rerank-model']);
       const minScore = parseFloat(flags['min-score'] || '0');
 
       // Hybrid search using service

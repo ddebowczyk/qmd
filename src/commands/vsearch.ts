@@ -5,7 +5,7 @@ import { getDbPath } from '../utils/paths.ts';
 import { getDb } from '../database/index.ts';
 import { vectorSearch } from '../services/search.ts';
 import { logSearch } from '../utils/history.ts';
-import { DEFAULT_EMBED_MODEL } from '../config/constants.ts';
+import { getEmbedModel } from '../config/constants.ts';
 
 export default class VSearchCommand extends Command {
   static description = 'Vector similarity search';
@@ -66,7 +66,7 @@ export default class VSearchCommand extends Command {
     const db = getDb(flags.index);
 
     try {
-      const embedModel = flags['embed-model'] || DEFAULT_EMBED_MODEL;
+      const embedModel = getEmbedModel(flags['embed-model']);
 
       // Determine output format
       let format: 'cli' | 'json' | 'csv' | 'files' = 'cli';

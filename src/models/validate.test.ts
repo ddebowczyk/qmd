@@ -11,6 +11,7 @@ import {
   validateOptional,
   ValidationError,
 } from './validate.ts';
+import { enableStrictValidation, disableStrictValidation } from '../../tests/fixtures/helpers/test-validation.ts';
 
 const TestSchema = z.object({
   id: z.number().positive(),
@@ -106,7 +107,7 @@ describe('validateArray', () => {
 describe('validateOptional', () => {
   test('validates in strict mode when STRICT_VALIDATION=true', () => {
     const originalEnv = process.env.STRICT_VALIDATION;
-    process.env.STRICT_VALIDATION = 'true';
+    enableStrictValidation();
 
     const data = { id: -1, name: '', email: 'invalid' };
 
@@ -114,12 +115,14 @@ describe('validateOptional', () => {
       validateOptional(TestSchema, data);
     }).toThrow();
 
-    process.env.STRICT_VALIDATION = originalEnv;
+    // Restore original state
+    if (originalEnv) process.env.STRICT_VALIDATION = originalEnv;
+    else disableStrictValidation();
   });
 
   test('returns data without throwing in non-strict mode', () => {
     const originalEnv = process.env.STRICT_VALIDATION;
-    process.env.STRICT_VALIDATION = 'false';
+    disableStrictValidation();
 
     const data = { id: -1, name: '', email: 'invalid' };
 
@@ -127,7 +130,9 @@ describe('validateOptional', () => {
     const result = validateOptional(TestSchema, data);
     expect(result).toBeDefined();
 
-    process.env.STRICT_VALIDATION = originalEnv;
+    // Restore original state
+    if (originalEnv) process.env.STRICT_VALIDATION = originalEnv;
+    else disableStrictValidation();
   });
 });
 
