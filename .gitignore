@@ -4,6 +4,7 @@ node_modules/
 archive/
 texts/
 .cursor/
+research/
 *.md
 !docs/dev/README.md
 !CLAUDE.md
