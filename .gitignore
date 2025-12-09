@@ -12,4 +12,5 @@ texts/
 !*SUMMARY*.md
 !ARCHITECTURE.md
 !SQL_SAFETY.md
+!docs/**/*.md
 .beads/
