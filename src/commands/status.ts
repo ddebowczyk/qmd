@@ -1,7 +1,8 @@
 import { Command, Flags } from '@oclif/core';
-import { Database } from 'bun:sqlite';
-import { resolve } from 'path';
 import { existsSync } from 'fs';
+import { getDbPath } from '../utils/paths.ts';
+import { getDb } from '../database/index.ts';
+import { CollectionRepository } from '../database/repositories/index.ts';
 
 export default class StatusCommand extends Command {
   static description = 'Show index status and collections';
@@ -16,8 +17,7 @@ export default class StatusCommand extends Command {
   async run(): Promise<void> {
     const { flags } = await this.parse(StatusCommand);
 
-    const cacheDir = process.env.XDG_CACHE_HOME || resolve(process.env.HOME || '~', '.cache');
-    const dbPath = resolve(cacheDir, 'qmd', `${flags.index}.sqlite`);
+    const dbPath = getDbPath(flags.index);
 
     if (!existsSync(dbPath)) {
       this.log(`No index found at: ${dbPath}`);
@@ -25,25 +25,13 @@ export default class StatusCommand extends Command {
       return;
     }
 
-    const db = new Database(dbPath, { readonly: true });
+    const db = getDb(flags.index);
 
     try {
-      // Get collections
-      const collections = db.prepare(`
-        SELECT id, pwd, glob_pattern, created_at
-        FROM collections
-        ORDER BY created_at DESC
-      `).all() as any[];
+      const collectionRepo = new CollectionRepository(db);
 
-      // Get document counts per collection
-      const docCounts = db.prepare(`
-        SELECT collection_id, COUNT(*) as count
-        FROM documents
-        WHERE active = 1
-        GROUP BY collection_id
-      `).all() as any[];
-
-      const countMap = new Map(docCounts.map((r: any) => [r.collection_id, r.count]));
+      // Get collections with document counts
+      const collections = collectionRepo.findAllWithCounts();
 
       // Display results
       this.log(`\n📊 Index: ${flags.index}`);
@@ -56,24 +44,16 @@ export default class StatusCommand extends Command {
 
       this.log(`Collections (${collections.length}):`);
       for (const col of collections) {
-        const count = countMap.get(col.id) || 0;
         this.log(`  ${col.pwd}`);
         this.log(`    Pattern: ${col.glob_pattern}`);
-        this.log(`    Documents: ${count}`);
+        this.log(`    Documents: ${col.active_count}`);
         this.log(`    Created: ${new Date(col.created_at).toLocaleString()}`);
         this.log('');
       }
 
-      // Get total counts
-      const totals = db.prepare(`
-        SELECT
-          COUNT(*) as total_docs,
-          COUNT(DISTINCT collection_id) as total_collections
-        FROM documents
-        WHERE active = 1
-      `).get() as any;
-
-      this.log(`Total: ${totals.total_docs} documents in ${totals.total_collections} collections`);
+      // Calculate totals
+      const totalDocs = collections.reduce((sum, col) => sum + col.active_count, 0);
+      this.log(`Total: ${totalDocs} documents in ${collections.length} collections`);
 
     } finally {
       db.close();
