@@ -139,6 +139,13 @@ export function initializeSchema(db: Database): void {
   db.exec(`CREATE INDEX IF NOT EXISTS idx_documents_filepath ON documents(filepath, active)`);
   // Ensure only one active document per filepath
   db.exec(`CREATE UNIQUE INDEX IF NOT EXISTS idx_documents_filepath_active ON documents(filepath) WHERE active = 1`);
+  // Time-based queries (recently modified documents)
+  db.exec(`CREATE INDEX IF NOT EXISTS idx_documents_modified_at ON documents(modified_at DESC) WHERE active = 1`);
+
+  // Additional performance indexes
+  db.exec(`CREATE INDEX IF NOT EXISTS idx_collections_context ON collections(context) WHERE context IS NOT NULL`);
+  db.exec(`CREATE INDEX IF NOT EXISTS idx_content_vectors_model ON content_vectors(model)`);
+  db.exec(`CREATE INDEX IF NOT EXISTS idx_ollama_cache_created_at ON ollama_cache(created_at)`);
 }
 
 /**
