@@ -7,3 +7,4 @@ texts/
 *.md
 !README.md
 !CLAUDE.md
+.beads/
