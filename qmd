@@ -11,4 +11,9 @@ while [ -L "$SOURCE" ]; do
 done
 SCRIPT_DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
 
-exec bun "$SCRIPT_DIR/qmd.ts" "$@"
+# Use oclif if available, fallback to legacy qmd.ts
+if [ -f "$SCRIPT_DIR/bin/run" ]; then
+  exec "$SCRIPT_DIR/bin/run" "$@"
+else
+  exec bun "$SCRIPT_DIR/qmd.ts" "$@"
+fi

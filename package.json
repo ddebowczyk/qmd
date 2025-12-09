@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.24.3",
+    "@oclif/core": "^4.8.0",
     "sqlite-vec": "^0.1.7-alpha.2",
     "zod": "^4.1.13"
   },
@@ -34,6 +35,13 @@
   },
   "engines": {
     "bun": ">=1.0.0"
+  },
+  "oclif": {
+    "bin": "qmd",
+    "dirname": "qmd",
+    "commands": "./src/commands",
+    "topicSeparator": " ",
+    "topics": {}
   },
   "keywords": [
     "markdown",
