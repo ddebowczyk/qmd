@@ -24,7 +24,7 @@ export function getDb(indexName: string = "index"): Database {
  * Initialize database schema (tables, indices, triggers)
  * @param db - Database instance
  */
-function initializeSchema(db: Database): void {
+export function initializeSchema(db: Database): void {
   // Collections table
   db.exec(`
     CREATE TABLE IF NOT EXISTS collections (
