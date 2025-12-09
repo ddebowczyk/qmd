@@ -5,9 +5,10 @@ Use Bun instead of Node.js (`bun` not `node`, `bun install` not `npm install`).
 ## Commands
 
 ```sh
+qmd init               # Initialize .qmd/ directory for project-local index
+qmd doctor             # Check system health and diagnose issues
 qmd add .              # Index markdown files in current directory
 qmd status             # Show index status and collections
-qmd update-all         # Re-index all collections
 qmd embed              # Generate vector embeddings (requires Ollama)
 qmd search <query>     # BM25 full-text search
 qmd vsearch <query>    # Vector similarity search
@@ -25,15 +26,16 @@ bun link               # Install globally as 'qmd'
 
 - SQLite FTS5 for full-text search (BM25)
 - sqlite-vec for vector similarity search
-- Ollama for embeddings (embeddinggemma) and reranking (qwen3-reranker)
+- Ollama for embeddings (nomic-embed-text) and reranking (qwen3-reranker)
 - Reciprocal Rank Fusion (RRF) for combining results
+- Project-local indexes via `.qmd/` directory (like `.git/`)
 
 ## Important: Do NOT run automatically
 
-- Never run `qmd add`, `qmd add-context`, `qmd embed`, or `qmd update-all` automatically
+- Never run `qmd add`, `qmd init`, or `qmd embed` automatically
 - Never modify the SQLite database directly
 - Write out example commands for the user to run manually
-- Index is stored at `~/.cache/qmd/index.sqlite`
+- Index location: `.qmd/` (project-local) or `~/.cache/qmd/` (global default)
 
 ## Do NOT compile
 
