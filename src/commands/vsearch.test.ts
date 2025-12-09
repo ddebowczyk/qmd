@@ -9,7 +9,7 @@ import VSearchCommand from './vsearch.ts';
 describe('VSearchCommand', () => {
   test('is an oclif Command', () => {
     expect(VSearchCommand).toBeDefined();
-    expect(VSearchCommand.description).toContain('Vector search');
+    expect(VSearchCommand.description).toContain('similarity');
   });
 
   test('has query argument', () => {
@@ -19,12 +19,11 @@ describe('VSearchCommand', () => {
 
   test('has output flags', () => {
     expect(VSearchCommand.flags).toBeDefined();
-    expect(VSearchCommand.flags.format).toBeDefined();
-    expect(VSearchCommand.flags.limit).toBeDefined();
+    expect(VSearchCommand.flags.json).toBeDefined();
+    expect(VSearchCommand.flags.n).toBeDefined();
   });
 
-  test('has model and index flags', () => {
-    expect(VSearchCommand.flags.model).toBeDefined();
+  test('has index flag', () => {
     expect(VSearchCommand.flags.index).toBeDefined();
   });
 

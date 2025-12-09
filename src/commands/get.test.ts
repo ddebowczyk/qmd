@@ -12,9 +12,9 @@ describe('GetCommand', () => {
     expect(GetCommand.description).toContain('document');
   });
 
-  test('has path argument', () => {
+  test('has file argument', () => {
     expect(GetCommand.args).toBeDefined();
-    expect(GetCommand.args.path).toBeDefined();
+    expect(GetCommand.args.file).toBeDefined();
   });
 
   test('has index flag', () => {

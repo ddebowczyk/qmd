@@ -19,8 +19,8 @@ describe('SearchCommand', () => {
 
   test('has output flags', () => {
     expect(SearchCommand.flags).toBeDefined();
-    expect(SearchCommand.flags.format).toBeDefined();
-    expect(SearchCommand.flags.limit).toBeDefined();
+    expect(SearchCommand.flags.json).toBeDefined();
+    expect(SearchCommand.flags.n).toBeDefined();
   });
 
   test('has index flag', () => {

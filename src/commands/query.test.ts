@@ -19,13 +19,8 @@ describe('QueryCommand', () => {
 
   test('has output flags', () => {
     expect(QueryCommand.flags).toBeDefined();
-    expect(QueryCommand.flags.format).toBeDefined();
-    expect(QueryCommand.flags.limit).toBeDefined();
-  });
-
-  test('has model flags', () => {
-    expect(QueryCommand.flags['embed-model']).toBeDefined();
-    expect(QueryCommand.flags['rerank-model']).toBeDefined();
+    expect(QueryCommand.flags.json).toBeDefined();
+    expect(QueryCommand.flags.n).toBeDefined();
   });
 
   test('has index flag', () => {
