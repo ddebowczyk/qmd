@@ -16,7 +16,7 @@ export class PathContextRepository {
    */
   findForPath(filepath: string): PathContext | null {
     const stmt = this.db.prepare(`
-      SELECT path_prefix, context AS context_text
+      SELECT id, path_prefix, context, created_at
       FROM path_contexts
       WHERE ? LIKE path_prefix || '%'
       ORDER BY LENGTH(path_prefix) DESC
@@ -31,7 +31,7 @@ export class PathContextRepository {
    */
   findAll(): PathContext[] {
     const stmt = this.db.prepare(`
-      SELECT path_prefix, context AS context_text
+      SELECT id, path_prefix, context, created_at
       FROM path_contexts
       ORDER BY path_prefix
     `);

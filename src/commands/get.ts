@@ -89,7 +89,7 @@ export default class GetCommand extends Command {
 
       // Display result
       if (context) {
-        this.log(`Folder Context: ${context.context_text}`);
+        this.log(`Folder Context: ${context.context}`);
         this.log('---\n');
       }
       this.log(output);

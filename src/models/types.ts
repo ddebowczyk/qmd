@@ -56,16 +56,19 @@ export interface Collection {
   pwd: string;
   glob_pattern: string;
   created_at: string;
+  context?: string;
 }
 
 export interface Document {
   id: number;
   collection_id: number;
+  name?: string;
   filepath: string;
   hash: string;
   title: string;
   body: string;
   active: number;
+  created_at?: string;
   modified_at: string;
   display_path?: string;
 }
@@ -78,12 +81,14 @@ export interface ContentVector {
 }
 
 export interface PathContext {
+  id?: number;
   path_prefix: string;
-  context_text: string;
+  context: string;
+  created_at?: string;
 }
 
 export interface OllamaCache {
-  cache_key: string;
+  hash: string;
   result: string;
   created_at: string;
 }

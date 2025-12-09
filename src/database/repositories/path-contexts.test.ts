@@ -30,7 +30,7 @@ describe('PathContextRepository', () => {
 
       expect(context).not.toBeNull();
       expect(context?.path_prefix).toBe('/home/user/docs');
-      expect(context?.context_text).toBe('Documentation directory');
+      expect(context?.context).toBe('Documentation directory');
     });
 
     test('finds longest matching prefix', () => {
@@ -98,7 +98,7 @@ describe('PathContextRepository', () => {
 
       expect(context).not.toBeNull();
       expect(context?.path_prefix).toBe('/test/path');
-      expect(context?.context_text).toBe('Test context');
+      expect(context?.context).toBe('Test context');
     });
 
     test('updates existing path context', () => {
@@ -108,7 +108,7 @@ describe('PathContextRepository', () => {
       const contexts = repo.findAll();
 
       expect(contexts).toHaveLength(1);
-      expect(contexts[0].context_text).toBe('Updated context');
+      expect(contexts[0].context).toBe('Updated context');
     });
 
     test('handles empty context text', () => {
@@ -117,7 +117,7 @@ describe('PathContextRepository', () => {
       const context = repo.findForPath('/test/path/file.md');
 
       expect(context).not.toBeNull();
-      expect(context?.context_text).toBe('');
+      expect(context?.context).toBe('');
     });
   });
 

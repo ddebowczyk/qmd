@@ -197,21 +197,21 @@ describe('Type Definitions', () => {
   test('PathContext interface structure', () => {
     const context: PathContext = {
       path_prefix: '/home/user/docs',
-      context_text: 'This is documentation',
+      context: 'This is documentation',
     };
 
     expect(context.path_prefix).toBeTruthy();
-    expect(context.context_text).toBeTruthy();
+    expect(context.context).toBeTruthy();
   });
 
   test('OllamaCache interface structure', () => {
     const cache: OllamaCache = {
-      cache_key: 'key123',
+      hash: 'key123',
       result: 'cached result',
       created_at: '2024-01-01T00:00:00Z',
     };
 
-    expect(cache.cache_key).toBe('key123');
+    expect(cache.hash).toBe('key123');
     expect(cache.result).toBe('cached result');
   });
 });

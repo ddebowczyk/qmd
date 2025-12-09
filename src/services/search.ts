@@ -87,7 +87,7 @@ export async function fullTextSearch(
   // Add context to results
   return results.map(r => ({
     ...r,
-    context: pathCtxRepo.findForPath(r.file)?.context_text || null,
+    context: pathCtxRepo.findForPath(r.file)?.context || null,
   }));
 }
 
@@ -117,7 +117,7 @@ export async function vectorSearch(
   // Add context to results
   return results.map(r => ({
     ...r,
-    context: pathCtxRepo.findForPath(r.file)?.context_text || null,
+    context: pathCtxRepo.findForPath(r.file)?.context || null,
   }));
 }
 
