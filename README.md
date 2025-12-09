@@ -200,18 +200,28 @@ The `query` command uses **Reciprocal Rank Fusion (RRF)** with position-aware bl
 
 QMD uses three models (auto-pulled if missing):
 
-| Model | Purpose | Size |
-|-------|---------|------|
-| `embeddinggemma` | Vector embeddings | ~1.6GB |
-| `ExpedientFalcon/qwen3-reranker:0.6b-q8_0` | Re-ranking (trained) | ~640MB |
-| `qwen3:0.6b` | Query expansion | ~400MB |
+| Model | Purpose | Size | Notes |
+|-------|---------|------|-------|
+| `nomic-embed-text` | Vector embeddings | ~274MB | **Recommended** - proper embedding model |
+| `ExpedientFalcon/qwen3-reranker:0.6b-q8_0` | Re-ranking (trained) | ~640MB | |
+| `qwen3:0.6b` | Query expansion | ~400MB | |
 
 ```sh
 # Pre-pull models (optional)
-ollama pull embeddinggemma
+ollama pull nomic-embed-text
 ollama pull ExpedientFalcon/qwen3-reranker:0.6b-q8_0
 ollama pull qwen3:0.6b
 ```
+
+**Alternative Embedding Models:**
+- `all-minilm` (45MB, faster, lower quality)
+- `snowflake-arctic-embed` (669MB, higher quality)
+
+Configure via environment variable or CLI flag (see Model Configuration below).
+
+> **Note:** Previous versions used `embeddinggemma`, which is a **generative model** not an embedding model.
+> This caused `qmd embed` to fail with "this model does not support embeddings".
+> The default has been changed to `nomic-embed-text`, a proper embedding model.
 
 ## Installation
 
@@ -373,6 +383,8 @@ ollama_cache    -- Cached API responses
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `OLLAMA_URL` | `http://localhost:11434` | Ollama API endpoint |
+| `QMD_EMBED_MODEL` | `nomic-embed-text` | Default embedding model |
+| `QMD_RERANK_MODEL` | `ExpedientFalcon/qwen3-reranker:0.6b-q8_0` | Default reranking model |
 | `XDG_CACHE_HOME` | `~/.cache` | Cache directory location |
 
 ## How It Works
@@ -439,21 +451,39 @@ Query ──► LLM Expansion ──► [Original, Variant 1, Variant 2]
 
 ## Model Configuration
 
-Models are configured as constants in `qmd.ts`:
+Models can be configured through environment variables or CLI flags:
 
+**Environment Variables:**
+```sh
+export QMD_EMBED_MODEL="all-minilm"              # Use faster model
+export QMD_RERANK_MODEL="custom-reranker:latest" # Use custom reranker
+```
+
+**CLI Flags (per-command override):**
+```sh
+qmd embed --embed-model all-minilm
+qmd vsearch "query" --embed-model snowflake-arctic-embed
+qmd query "query" --embed-model nomic-embed-text --rerank-model custom:latest
+```
+
+**Priority:** CLI flag > Environment variable > Default
+
+**Defaults:**
 ```typescript
-const DEFAULT_EMBED_MODEL = "embeddinggemma";
-const DEFAULT_RERANK_MODEL = "ExpedientFalcon/qwen3-reranker:0.6b-q8_0";
+const DEFAULT_EMBED_MODEL = process.env.QMD_EMBED_MODEL || "nomic-embed-text";
+const DEFAULT_RERANK_MODEL = process.env.QMD_RERANK_MODEL || "ExpedientFalcon/qwen3-reranker:0.6b-q8_0";
 const DEFAULT_QUERY_MODEL = "qwen3:0.6b";
 ```
 
-### EmbeddingGemma Prompt Format
+### Nomic Embed Text
+
+Nomic Embed Text is a proper embedding model designed for semantic search:
 
 ```
-// For queries
-"task: search result | query: {query}"
+// For queries - plain text
+"search query text"
 
-// For documents
+// For documents - title and content
 "title: {title} | text: {content}"
 ```
 
