@@ -10,6 +10,7 @@ import { getRealPath, computeDisplayPath, getPwd } from '../utils/paths.ts';
 import { formatETA } from '../utils/formatters.ts';
 import { progress } from '../config/terminal.ts';
 import { getHashesNeedingEmbedding } from '../database/db.ts';
+import { shouldAnalyze, analyzeDatabase } from '../database/performance.ts';
 import { resolve } from 'path';
 
 /**
@@ -193,6 +194,12 @@ export async function indexFiles(
 
   if (needsEmbedding > 0) {
     console.log(`\nRun 'qmd embed' to update embeddings (${needsEmbedding} unique hashes need vectors)`);
+  }
+
+  // Optimize query planner if significant changes were made
+  const totalChanges = indexed + updated + removed;
+  if (shouldAnalyze(db, totalChanges)) {
+    analyzeDatabase(db);
   }
 
   return { indexed, updated, unchanged, removed, needsEmbedding };
