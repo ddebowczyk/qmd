@@ -258,4 +258,4 @@ qmd init --with-index
 - Learn all commands: [Commands Reference](commands.md)
 - Set up project properly: [Project Setup](project-setup.md)
 - Understand indexes: [Index Management](index-management.md)
-- Add to CI/CD: [CI/CD Integration](ci-cd.md)
+- Add to CI/CD: [CI/CD Integration](../dev/ci-cd.md)

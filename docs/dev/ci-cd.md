@@ -371,7 +371,7 @@ jobs:
 
 ### Complete Workflow
 
-See [`.github/workflows/test.yml`](../.github/workflows/test.yml) for full example.
+See [`.github/workflows/test.yml`](../../.github/workflows/test.yml) for full example.
 
 ## Additional Resources
 

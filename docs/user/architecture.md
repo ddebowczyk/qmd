@@ -28,7 +28,7 @@ Repositories (Data Access)
 Database (Storage)
 ```
 
-**See:** [`ARCHITECTURE.md`](../ARCHITECTURE.md) for detailed layer information.
+**See:** [`ARCHITECTURE.md`](../dev/ARCHITECTURE.md) for detailed layer information.
 
 ## Index Location Priority
 
@@ -401,6 +401,6 @@ Design allows for:
 
 ## References
 
-- [ARCHITECTURE.md](../ARCHITECTURE.md) - Detailed layer docs
+- [ARCHITECTURE.md](../dev/ARCHITECTURE.md) - Detailed layer docs
 - [SQL_SAFETY.md](../SQL_SAFETY.md) - SQL injection prevention
-- [CLAUDE.md](../CLAUDE.md) - Development guidelines
+- [CLAUDE.md](../../CLAUDE.md) - Development guidelines

@@ -5,12 +5,12 @@ archive/
 texts/
 .cursor/
 *.md
-!README.md
+!docs/dev/README.md
 !CLAUDE.md
 !*PLAN*.md
 !*STRATEGY*.md
 !*SUMMARY*.md
-!ARCHITECTURE.md
+!docs/dev/ARCHITECTURE.md
 !SQL_SAFETY.md
 !docs/**/*.md
 .beads/
