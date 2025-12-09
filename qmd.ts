@@ -41,8 +41,8 @@ if (process.platform === "darwin") {
   }
 }
 
-const DEFAULT_EMBED_MODEL = "embeddinggemma";
-const DEFAULT_RERANK_MODEL = "ExpedientFalcon/qwen3-reranker:0.6b-q8_0";
+const DEFAULT_EMBED_MODEL = process.env.QMD_EMBED_MODEL || "nomic-embed-text";
+const DEFAULT_RERANK_MODEL = process.env.QMD_RERANK_MODEL || "ExpedientFalcon/qwen3-reranker:0.6b-q8_0";
 const DEFAULT_QUERY_MODEL = "qwen3:0.6b";
 const DEFAULT_GLOB = "**/*.md";
 const OLLAMA_URL = process.env.OLLAMA_URL || "http://localhost:11434";
@@ -2266,6 +2266,9 @@ function parseCLI() {
       // Global options
       index: { type: "string" },
       help: { type: "boolean", short: "h" },
+      // Model options
+      "embed-model": { type: "string" },
+      "rerank-model": { type: "string" },
       // Search options
       n: { type: "string" },
       "min-score": { type: "string" },
@@ -2339,6 +2342,8 @@ function showHelp(): void {
   console.log("");
   console.log("Global options:");
   console.log("  --index <name>             - Use custom index name (default: index)");
+  console.log("  --embed-model <model>      - Override embedding model (default: nomic-embed-text)");
+  console.log("  --rerank-model <model>     - Override reranking model");
   console.log("");
   console.log("Search options:");
   console.log("  -n <num>                   - Number of results (default: 5, or 20 for --files)");
@@ -2353,8 +2358,10 @@ function showHelp(): void {
   console.log("");
   console.log("Environment:");
   console.log("  OLLAMA_URL                 - Ollama server URL (default: http://localhost:11434)");
+  console.log("  QMD_EMBED_MODEL            - Default embedding model (default: nomic-embed-text)");
+  console.log("  QMD_RERANK_MODEL           - Default reranking model");
   console.log("");
-  console.log("Models:");
+  console.log("Models (current):");
   console.log(`  Embedding: ${DEFAULT_EMBED_MODEL}`);
   console.log(`  Reranking: ${DEFAULT_RERANK_MODEL}`);
   console.log("");
@@ -2422,9 +2429,11 @@ switch (cli.command) {
     await updateAllCollections();
     break;
 
-  case "embed":
-    await vectorIndex(DEFAULT_EMBED_MODEL, cli.values.force || false);
+  case "embed": {
+    const embedModel = cli.values["embed-model"] || DEFAULT_EMBED_MODEL;
+    await vectorIndex(embedModel as string, cli.values.force || false);
     break;
+  }
 
   case "search":
     if (!cli.query) {
@@ -2434,7 +2443,7 @@ switch (cli.command) {
     search(cli.query, cli.opts);
     break;
 
-  case "vsearch":
+  case "vsearch": {
     if (!cli.query) {
       console.error("Usage: qmd vsearch [options] <query>");
       process.exit(1);
@@ -2443,16 +2452,21 @@ switch (cli.command) {
     if (!cli.values["min-score"]) {
       cli.opts.minScore = 0.3;
     }
-    await vectorSearch(cli.query, cli.opts);
+    const embedModel = cli.values["embed-model"] || DEFAULT_EMBED_MODEL;
+    await vectorSearch(cli.query, cli.opts, embedModel as string);
     break;
+  }
 
-  case "query":
+  case "query": {
     if (!cli.query) {
       console.error("Usage: qmd query [options] <query>");
       process.exit(1);
     }
-    await querySearch(cli.query, cli.opts);
+    const embedModel = cli.values["embed-model"] || DEFAULT_EMBED_MODEL;
+    const rerankModel = cli.values["rerank-model"] || DEFAULT_RERANK_MODEL;
+    await querySearch(cli.query, cli.opts, embedModel as string, rerankModel as string);
     break;
+  }
 
   case "mcp":
     await startMcpServer();
