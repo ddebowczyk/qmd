@@ -60,7 +60,25 @@ qmd add ~/Documents/notes   # Uses ~/.cache/qmd/default.sqlite
 - Write out example commands for the user to run manually
 - Index location: `.qmd/` (project-local) or `~/.cache/qmd/` (global default)
 
-## Do NOT compile
+## Build & Distribution
 
-- Never run `bun build --compile` - it overwrites the shell wrapper and breaks sqlite-vec
-- The `qmd` file is a shell script that runs `bun qmd.ts` - do not replace it
+### ⚠️ Compilation Does NOT Work
+- **Never use `bun build --compile`** - produces a binary that runs but outputs nothing
+- Not specifically a sqlite-vec issue - oclif's dynamic imports aren't compatible with Bun's compiler
+- See `BUILD.md` for detailed testing results
+
+### ✅ Working Distribution Methods
+1. **Install Bun on target machine** (recommended)
+   ```sh
+   curl -fsSL https://bun.sh/install | bash
+   git clone <repo> && cd qmd && bun install
+   ```
+2. **Docker container** - packages everything including Bun runtime
+3. **Package manager** - publish with Bun as peer dependency
+
+### Build Scripts (For Testing Only)
+- `bun run build` - Creates compiled binary (doesn't work)
+- `bun run build:bundle` - Attempts bundling (doesn't work)
+- `./builds/` directory is git-ignored
+
+The shell wrapper approach (`./qmd` → `bin/run`) is the correct solution.

@@ -14,6 +14,8 @@
     "vsearch": "bun qmd.ts vsearch",
     "rerank": "bun qmd.ts rerank",
     "link": "bun link",
+    "build": "bun build bin/run --compile --outfile builds/qmd",
+    "build:bundle": "bun build bin/run --target bun --outdir builds",
     "test": "bun test",
     "test:watch": "bun test --watch",
     "test:coverage": "bun test --coverage",

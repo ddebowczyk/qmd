@@ -8,6 +8,7 @@ research/
 *.md
 !docs/dev/README.md
 !CLAUDE.md
+!BUILD.md
 !*PLAN*.md
 !*STRATEGY*.md
 !*SUMMARY*.md
@@ -15,3 +16,4 @@ research/
 !SQL_SAFETY.md
 !docs/**/*.md
 .beads/
+builds/
